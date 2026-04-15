@@ -1,0 +1,363 @@
+:root {
+    --bg-color-1: #1a2a6c;
+    --bg-color-2: #b21f1f;
+    --bg-color-3: #fdbb2d;
+    --text-primary: #ffffff;
+    --text-secondary: rgba(255, 255, 255, 0.7);
+    --glass-bg: rgba(255, 255, 255, 0.1);
+    --glass-border: rgba(255, 255, 255, 0.2);
+    --glass-shadow: rgba(0, 0, 0, 0.2);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    color: var(--text-primary);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, var(--bg-color-1), var(--bg-color-2), var(--bg-color-3));
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
+}
+
+@keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.app-container {
+    width: 100%;
+    max-width: 1200px;
+    padding: 20px;
+}
+
+/* Título e Instrucciones */
+.app-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.main-title {
+    font-size: 2.8rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+    letter-spacing: 1px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+.app-instructions {
+    color: var(--text-secondary);
+    font-size: 1.05rem;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Barra de Busqueda Estilo Glass */
+.search-box {
+    display: flex;
+    align-items: center;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 30px;
+    padding: 5px 20px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px var(--glass-shadow);
+    margin-bottom: 30px;
+    transition: all 0.3s ease;
+}
+
+.search-box:focus-within {
+    background: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3);
+}
+
+.search-box input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text-primary);
+    font-size: 1.1rem;
+    padding: 10px 0;
+    font-family: inherit;
+}
+
+.search-box input::placeholder {
+    color: var(--text-secondary);
+}
+
+.search-box button {
+    background: transparent;
+    border: none;
+    color: var(--text-primary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s;
+}
+
+.search-box button:hover {
+    transform: scale(1.1);
+}
+
+/* Tarjeta del Clima */
+/* Contenedor centralizado para estados */
+.status-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+/* Layout dinámico de tarjetas */
+.cards-layout {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+.weather-card {
+    flex: 1 1 300px;
+    max-width: 350px;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 30px;
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    box-shadow: 0 8px 32px var(--glass-shadow);
+    text-align: center;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.weather-card.hidden {
+    opacity: 0;
+    transform: translateY(20px);
+    pointer-events: none;
+    display: none;
+}
+
+/* Loader */
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid var(--glass-border);
+    border-top: 4px solid var(--text-primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 15px auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Contenido del Clima */
+.weather-header h1 {
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    text-transform: capitalize;
+}
+
+.weather-body .temperature {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    margin-bottom: 10px;
+}
+
+.weather-body h2 {
+    font-size: 4.5rem;
+    font-weight: 600;
+    line-height: 1;
+}
+
+.weather-body .unit {
+    font-size: 1.5rem;
+    margin-top: 10px;
+}
+
+.weather-description {
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+    margin-bottom: 30px;
+    text-transform: capitalize;
+}
+
+.weather-details {
+    display: flex;
+    justify-content: center;
+    border-top: 1px solid var(--glass-border);
+    padding-top: 20px;
+}
+
+.detail-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.detail-label {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 5px;
+}
+
+.detail-value {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.error-message {
+    color: #ffb4b4;
+    font-weight: 600;
+}
+
+/* Pronóstico Diario (7 Días) */
+.forecast-container {
+    display: flex;
+    gap: 12px;
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid var(--glass-border);
+    overflow-x: auto;
+    padding-bottom: 5px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--glass-border) transparent;
+}
+
+.forecast-container::-webkit-scrollbar {
+    height: 4px;
+}
+.forecast-container::-webkit-scrollbar-thumb {
+    background: var(--glass-border);
+    border-radius: 4px;
+}
+
+.forecast-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 45px;
+    justify-content: space-between;
+}
+
+.forecast-item .day-name {
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: capitalize;
+    color: var(--text-secondary);
+}
+
+.forecast-item .day-icon {
+    font-size: 1.5rem;
+    margin: 8px 0;
+}
+
+.forecast-item .day-temps {
+    font-size: 0.85rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.forecast-item .day-temps .max {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.forecast-item .day-temps .min {
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+}
+
+/* Atribuciones y Footer (Tooltip Hover) */
+.app-footer {
+    text-align: center;
+    margin-top: 50px;
+    padding-bottom: 20px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+}
+
+.credits-label {
+    cursor: help;
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    border-bottom: 1px dashed var(--glass-border);
+    padding-bottom: 2px;
+    transition: color 0.3s ease;
+}
+
+.credits-label:hover {
+    color: var(--text-primary);
+}
+
+.tooltip-box {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    background: rgba(20, 20, 40, 0.95);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(10px);
+    color: var(--text-secondary);
+    padding: 15px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    width: max-content;
+    max-width: 320px;
+    text-align: center;
+    line-height: 1.5;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+    z-index: 100;
+}
+
+/* Triángulo Decorativo para el Tooltip (Flecha) */
+.tooltip-box::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -8px;
+    border-width: 8px;
+    border-style: solid;
+    border-color: rgba(20, 20, 40, 0.95) transparent transparent transparent;
+}
+
+.app-footer:hover .tooltip-box {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(-10px); /* Sube suavemente y aparece mágicamente */
+}
+
+.tooltip-box a {
+    color: var(--text-primary);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.tooltip-box a:hover {
+    text-decoration: underline;
+}

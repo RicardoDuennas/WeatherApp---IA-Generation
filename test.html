@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Automated Tests | WeatherApp</title>
+    <!-- Usamos una fuente agradable de Google -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body { 
+            font-family: 'Poppins', sans-serif; 
+            background: #111827; 
+            padding: 40px; 
+            color: #d1d5db; 
+        }
+        .test-container { 
+            max-width: 600px; 
+            margin: 0 auto; 
+            background: #1f2937; 
+            padding: 30px; 
+            border-radius: 12px; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5); 
+        }
+        h1 { margin-top: 0; color: #f3f4f6; }
+        .test-item { 
+            padding: 15px; 
+            margin-bottom: 12px; 
+            border-radius: 8px; 
+            border-left: 6px solid #4b5563; 
+            background: #374151; 
+        }
+        .test-passed { border-left-color: #10b981; }
+        .test-failed { border-left-color: #ef4444; }
+        .status { font-weight: 600; margin-bottom: 5px; font-size: 1.1rem; }
+        .passed-text { color: #34d399; }
+        .failed-text { color: #f87171; }
+        small { display: block; margin-top: 5px; color: #9ca3af; font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+
+    <div class="test-container">
+        <h1>Centro de Pruebas 🧪</h1>
+        <p>Ejecutando la suite de validación (TDD) para el archivo central de tu aplicación: <code>api.js</code>.</p>
+        <hr style="border: 0; border-bottom: 1px solid #4b5563; margin-bottom: 20px;">
+        <div id="results"></div>
+    </div>
+
+    <!-- Cargamos EXCLUSIVAMENTE el core de datos, ignorando la interfaz y la hoja CSS principal -->
+    <script src="js/api.js"></script>
+
+    <!-- Nuestro propio pequeño Framework de Pruebas "Vainilla" -->
+    <script>
+        const resultsEl = document.getElementById('results');
+
+        // Función para pintar la prueba en la pantalla
+        function appendResult(name, passed, detail = '') {
+            const div = document.createElement('div');
+            div.className = 'test-item ' + (passed ? 'test-passed' : 'test-failed');
+            div.innerHTML = `
+                <div class="status ${passed ? 'passed-text' : 'failed-text'}">
+                    ${passed ? '✔ PASÓ' : '✖ FALLÓ'} - ${name}
+                </div>
+                ${detail ? `<small>${detail}</small>` : ''}
+            `;
+            resultsEl.appendChild(div);
+        }
+
+        // --- INICIO DE PRUEBAS ---
+        async function runTests() {
+            // Prueba 1: Únitaria
+            try {
+                // Suministramos código 71 (Debe devolver nieve según nuestro JSDoc y funciones) 
+                const nieveEmoji = getWeatherEmoji(71);
+                
+                if (nieveEmoji === '❄️') {
+                    appendResult('Test Unitario: getWeatherEmoji valida mapa WMO correctamente', true, 'El código numérico 71 mapeó certeramente a nieve (❄️). La lógica interna JS está impecable.');
+                } else {
+                    appendResult('Test Unitario en el Diccionario de Climas', false, 'Se esperaba el símbolo de nieve pero devolvió: ' + nieveEmoji);
+                }
+            } catch (error) {
+                appendResult('Test Unitario Crítico (Error de compilación)', false, error.message);
+            }
+
+            // Prueba 2: Integración (Verificamos que el API endpoint de Internet responde correctamente)
+            try {
+                // Buscamos una ciudad determinística ("Bogotá") y le preguntamos a los servidores de un tercero
+                const coords = await getCoordinates('Bogotá');
+                
+                // Evaluamos que la respuesta SI traiga País y que ese país sí se asigne a Colombia (sujeto a la DB de Open-Meteo)
+                if (coords && coords.lat && coords.country === 'Colombia') {
+                    appendResult('Test End-To-End (Red): getCoordinates se comunica la Nube', true, 
+                        `Handshake exitoso la API externa. Múltiple validación correcta: Se encontró a Bogotá como país Colombia en Latitud: ${coords.lat.toFixed(2)}.`
+                    );
+                } else {
+                    appendResult('Test End-To-End: Comunicación', false, 'La API de Meteo.com respondió pero los atributos de respuesta mutaron o la estructura de datos se rompió.');
+                }
+            } catch (error) {
+                appendResult('Test End-To-End (Network Down)', false, 'No hay internet o la API colapsó: ' + error.message);
+            }
+        }
+
+        // Disparar las pruebas al abrir la página
+        runTests();
+    </script>
+</body>
+</html>
